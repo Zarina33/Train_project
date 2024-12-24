@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin View for Train {{ train.id }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+            text-transform: uppercase;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        a {
+            color: #1a73e8;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        img {
+            max-width: 400px; /* Увеличьте максимальную ширину для увеличения изображения */
+            height: auto;
+            cursor: pointer;
+        }
+
+        input[type="text"] {
+            width: 80%;
+            padding: 8px;
+            margin: 4px 0;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .pagination {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .pagination a {
+            color: #1a73e8;
+            padding: 8px 16px;
+            text-decoration: none;
+            border: 1px solid #ddd;
+            margin: 0 2px;
+            border-radius: 4px;
+        }
+
+        .pagination a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .pagination .current {
+            padding: 8px 16px;
+            border: 1px solid #4CAF50;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 4px;
+        }
+
+        .pagination .step-links {
+            display: inline-block;
+        }
+
+        /* Back button styling */
+        .back-button {
+            background-color: #f44336;
+            color: white;
+            padding: 10px 15px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .back-button:hover {
+            background-color: #d32f2f;
+        }
+
+        .delete-button {
+            background-color: #f44336;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .delete-button:hover {
+            background-color: #d32f2f;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            overflow: auto;
+            background-color: rgba(0,0,0,0.9); /* Black with opacity */
+        }
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            max-width: 90%; 
+            max-height: 90%;
+        }
+
+        .modal-content, #caption {
+            animation-name: zoom;
+            animation-duration: 0.6s;
+        }
+
+        @keyframes zoom {
+            from {transform: scale(0)} 
+            to {transform: scale(1)}
+        }
+
+        .close {
+            position: absolute;
+            top: 20px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #bbb;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Admin View: Train № {{ train.id }}</h1>
+    <a href="{% url 'train_list' %}" class="back-button">Back to List of Trains</a>
+
+    <!-- Отображение общего количества деталей для отладки -->
+    <p>Train details count in admin view: {{ page_obj|length }}</p>
+    
+    <!-- Отладочная информация для проверки содержимого page_obj -->
+    {% if page_obj %}
+        <p>Displaying {{ page_obj.start_index }} to {{ page_obj.end_index }} of {{ page_obj.paginator.count }} details.</p>
+    {% else %}
+        <p>No details available for this train.</p>
+    {% endif %}
+
+    <!-- Пагинация -->
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+
+    <table border="1">
+        <tr>
+            <th>Serial Number</th>
+            <th>Image</th>
+            <th>Edit</th>
+        </tr>
+        {% for detail in page_obj %}
+        <tr>
+            <td>{{ detail.serial_number }}</td>
+            <td>
+                {% if detail.image_link %}
+                    <img src="{{ detail.image_link }}" alt="Image for {{ detail.serial_number }}" onclick="openModal(this)">
+                {% else %}
+                    No Image
+                {% endif %}
+            </td>
+            <td>
+                <form method="POST" action="">
+                    {% csrf_token %}
+                    <input type="hidden" name="detail_id" value="{{ detail.id }}" autocomplete="off">
+                    <input type="text" name="serial_number" value="{{ detail.serial_number }}" autocomplete="off">
+                    <button type="submit" name="delete_image" value="delete" class="delete-button">Delete</button>
+                    <button type="submit">Save</button>
+                </form>
+            </td>
+        </tr>
+        {% empty %}
+        <!-- Сообщение, если деталей нет -->
+        <tr>
+            <td colspan="3">No details available for this train.</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <!-- Модальное окно для просмотра изображений в полном размере -->
+    <div id="myModal" class="modal">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <img class="modal-content" id="modalImage">
+    </div>
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+
+    <a href="{% url 'train_list' %}" class="back-button">Back to List of Trains</a>
+
+    <script>
+        function openModal(imgElement) {
+            var modal = document.getElementById("myModal");
+            var modalImg = document.getElementById("modalImage");
+            modal.style.display = "block";
+            modalImg.src = imgElement.src;
+        }
+
+        function closeModal() {
+            var modal = document.getElementById("myModal");
+            modal.style.display = "none";
+        }
+    </script>
+</body>
+</html>

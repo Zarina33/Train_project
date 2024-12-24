@@ -1,0 +1,93 @@
+{% extends 'train_app/base.html' %}
+
+{% block title %}Manage Data for Train{% endblock %}
+
+{% block content %}
+<h1>Manage Data for Train</h1>
+
+<form method="post" onsubmit="return confirmDeletion()" class="delete-form" autocomplete="off">
+    {% csrf_token %}
+
+    <label for="date">Select Date:</label>
+    <input type="date" name="date" required autocomplete="off">
+
+    <label for="start_time">Start Time (24-hour format, e.g., 13:45:30):</label>
+    <input type="text" id="start_time" name="start_time" placeholder="HH:MM:SS" pattern="^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$" required autocomplete="off">
+
+    <label for="end_time">End Time (24-hour format, e.g., 22:30:45):</label>
+    <input type="text" id="end_time" name="end_time" placeholder="HH:MM:SS" pattern="^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$" required autocomplete="off">
+
+    <input type="hidden" name="confirm_delete" value="true">
+    
+    <button type="submit" class="delete-button">Delete Entries</button>
+</form>
+
+<script>
+    function confirmDeletion() {
+        return confirm("Are you sure you want to delete these entries?");
+    }
+
+    // JavaScript для проверки формата времени перед отправкой формы
+    document.querySelector("form").addEventListener("submit", function(event) {
+        const startTime = document.getElementById("start_time").value;
+        const endTime = document.getElementById("end_time").value;
+        const timeFormat = /^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/;
+
+        if (!timeFormat.test(startTime) || !timeFormat.test(endTime)) {
+            alert("Please enter time in 24-hour format with seconds (e.g., 14:30:45).");
+            event.preventDefault();
+        }
+    });
+</script>
+
+<style>
+    /* Center the form and add styling */
+    .delete-form {
+        max-width: 400px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .delete-form label {
+        display: block;
+        font-weight: bold;
+        margin-top: 10px;
+        color: #333;
+    }
+
+    .delete-form input[type="date"],
+    .delete-form input[type="text"] {
+        width: 100%;
+        padding: 8px;
+        margin-top: 5px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 14px;
+        box-sizing: border-box;
+        autocomplete: off;
+    }
+
+    .delete-button {
+        width: 100%;
+        background-color: #ff4d4d;
+        color: white;
+        padding: 10px;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+        text-align: center;
+        transition: background-color 0.3s ease;
+    }
+
+    .delete-button:hover {
+        background-color: #e60000;
+    }
+</style>
+
+{% endblock %}

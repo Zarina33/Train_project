@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Train Details for Train {{ train.train_id }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        img {
+            max-width: 400px; /* Увеличьте максимальную ширину для увеличения изображения */
+            height: auto;
+        }
+        a {
+            color: #1a73e8;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>Train № {{ train.train_id }}</h1>
+    <table>
+        <tr>
+            <th>Serial Number</th>
+            <th>Image</th>
+        </tr>
+        {% for detail in train_details %}
+        <tr>
+            <td>{{ detail.serial_number }}</td>
+            <td>
+                
+                {% if detail.image_link %}
+                                    <!-- Display the image directly instead of just a link -->
+                <img src="{{ detail.image_link }}" alt="Image for {{ detail.serial_number }}">
+                 {% else %}
+                    No Image
+                {% endif %}
+                </td>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

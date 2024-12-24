@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}Train Application{% endblock %}</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f2f2f2; padding: 20px; }
+        nav { margin-bottom: 20px; }
+        nav table { width: 100%; border-collapse: collapse; }
+        nav td { padding: 10px; text-align: center; border: 1px solid #ddd; }
+        nav a { text-decoration: none; color: #1a73e8; display: block; }
+        nav a:hover { text-decoration: underline; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; border: 1px solid #ddd; text-align: left; vertical-align: top; }
+        th { background-color: #4CAF50; color: white; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+        tr:hover { background-color: #f1f1f1; }
+        input[type="text"], input[type="password"] { width: 100%; padding: 6px; box-sizing: border-box; }
+        .save-button { background-color: #4CAF50; color: white; padding: 8px 16px; border: none; cursor: pointer; margin-top: 10px; }
+        .save-button:hover { background-color: #45a049; }
+        .pagination { margin-top: 20px; text-align: center; }
+        .pagination a { margin: 0 10px; text-decoration: none; color: #1a73e8; }
+        .pagination span { margin: 0 10px; }
+        img { max-width: 100%; height: auto; }
+        .login-form { max-width: 500px; margin: 0 auto; padding: 20px; background-color: white; border: 1px solid #ddd; }
+        .login-form h2 { margin-bottom: 20px; }
+        .login-form table { width: 100%; }
+        .login-form td { padding: 5px; }
+        .login-form button { width: 100%; padding: 10px; margin-top: 10px; }
+                .back-button:hover {
+            background-color: #d32f2f;
+        }
+    </style>
+</head>
+<body>
+    {% if user.is_authenticated %}
+    <header>
+        <!-- Навигация в таблице -->
+        <nav>
+            <table>
+                <tr>
+                    <td><a href="{% url 'train_list' %}">Список поездов</a></td>
+                    <td><a href="{% url 'logout' %}">Выход</a></td>
+                </tr>
+            </table>
+        </nav>
+    </header>
+    {% endif %}
+    {% block content %}
+    {% endblock %}
+</body>
+</html>

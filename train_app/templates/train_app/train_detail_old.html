@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Train Details for Train {{ train.train_id }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 20px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .back-button:hover {
+            background-color: #d32f2f;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        img {
+            max-width: 400px; /* Max width for the image */
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .pagination {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .pagination a, .pagination span {
+            display: inline-block;
+            padding: 8px 16px;
+            margin: 0 2px;
+            border: 1px solid #ddd;
+            color: #1a73e8;
+            text-decoration: none;
+        }
+
+        .pagination .current {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>Train № {{ train.train_id }}</h1>
+    <table>
+        <tr>
+            <th>Serial Number</th>
+            <th>Image</th>
+
+        </tr>
+        {% for detail in page_obj %}
+        <tr>
+            <td>{{ detail.serial_number }}</td>
+            <td>
+                {% if detail.image_link %}
+                    <img src="{{ detail.image_link }}" alt="Image for {{ detail.serial_number }}">
+                {% else %}
+                    No Image
+                {% endif %}
+            </td>
+            <td>{{ detail.time }}</td> <!-- Display the time field here -->
+        </tr>
+        {% endfor %}
+    </table>
+
+    <!-- Pagination controls -->
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+
+
+    </div>
+</body>
+</html>

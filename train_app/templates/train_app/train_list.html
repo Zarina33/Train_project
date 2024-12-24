@@ -1,0 +1,193 @@
+{% extends 'train_app/base.html' %}
+
+{% block title %}Список поездов{% endblock %}
+
+{% block content %}
+<h1>Список поездов</h1>
+<p>Добро пожаловать, {{ request.user.username }}!</p>
+
+{% if is_admin_user %}
+    <!-- Кнопка для удаления записей по времени -->
+    <a href="{% url 'delete_train_data' %}" class="delete-button">Delete by Time Period</a>
+{% endif %}
+
+<table class="train-table">
+    <thead>
+        <tr>
+            <th>Train ID</th>
+            <th>Местоположение</th>
+            <th>Направление</th>
+            <th>Дата</th>
+            <th>Время</th>
+            {% if is_admin_user %}
+                <th>Действие</th>
+            {% endif %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for train in trains %}
+        <tr>
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="train_id" value="{{ train.id }}">
+                <td>
+                    {% if is_admin_user %}
+                        <a class="train-link" href="{% url 'train_detail_admin' train.id %}">{{ train.train_id }}</a>
+                    {% else %}
+                        <a class="train-link" href="{% url 'train_detail' train.id %}">{{ train.train_id }}</a>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if is_admin_user %}
+                        <input class="input-field" type="text" name="location" value="{{ train.location }}">
+                    {% else %}
+                        {{ train.location }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if is_admin_user %}
+                        <input class="input-field" type="text" name="direction" value="{{ train.direction }}">
+                    {% else %}
+                        {{ train.direction }}
+                    {% endif %}
+                </td>
+                <td>{{ train.date }}</td>
+                <td>{{ train.time }}</td>
+                {% if is_admin_user %}
+                <td>
+                    <button type="submit" class="save-button">Сохранить</button>
+                </td>
+                {% endif %}
+            </form>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+        padding: 20px;
+        margin: 0;
+    }
+
+    h1 {
+        text-align: center;
+        color: #333;
+        font-size: 2em;
+    }
+
+    p {
+        text-align: center;
+        color: #555;
+        font-size: 1.2em;
+        margin-bottom: 20px;
+    }
+
+    .delete-button {
+        display: block;
+        width: fit-content;
+        margin: 10px auto 20px;
+        background-color: #ff4d4d;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        text-align: center;
+        text-decoration: none;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .delete-button:hover {
+        background-color: #e60000;
+    }
+
+    .train-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background-color: #fff;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .train-table th, .train-table td {
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        text-align: left;
+    }
+
+    .train-table th {
+        background-color: #4CAF50;
+        color: white;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    .train-table tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    .train-table tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    .train-link {
+        color: #1a73e8;
+        text-decoration: none;
+        font-weight: bold;
+        transition: color 0.3s ease;
+    }
+
+    .train-link:hover {
+        color: #0044cc;
+        text-decoration: underline;
+    }
+
+    .input-field {
+        width: 100%;
+        padding: 8px;
+        margin: 4px 0;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+
+    .save-button {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        text-align: center;
+        font-size: 14px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .save-button:hover {
+        background-color: #45a049;
+    }
+
+    /* Responsive styling */
+    @media (max-width: 768px) {
+        .train-table th, .train-table td {
+            padding: 10px 12px;
+            font-size: 14px;
+        }
+
+        h1 {
+            font-size: 1.8em;
+        }
+
+        p {
+            font-size: 1.1em;
+        }
+    }
+</style>
